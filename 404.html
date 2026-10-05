@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Off the map | manishh-13</title>
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#06080e">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<style>
+:root { color-scheme: dark; }
+html, body { margin: 0; height: 100%; background: #06080e; color: #ece9e1; font: 15px/1.55 "SF Mono", ui-monospace, Menlo, Monaco, Consolas, monospace; }
+main { min-height: 100%; display: grid; place-items: center; text-align: center; padding: 24px; box-sizing: border-box; }
+pre { margin: 0 auto 30px; font: inherit; font-size: clamp(9px, 2.4vw, 16px); line-height: 1.2; color: #4f93bd; }
+pre b { color: #ffcf6b; font-weight: 400; text-shadow: 0 0 12px rgba(255, 207, 107, 0.4); }
+pre i { color: #8a94a6; font-style: normal; }
+h1 { font-size: 21px; margin: 0 0 6px; }
+p { color: #98a2b3; margin: 0 0 24px; }
+a { display: inline-block; color: #1b1404; background: #ffcf6b; padding: 9px 16px; border-radius: 10px; text-decoration: none; font-weight: 600; }
+a:hover, a:focus-visible { background: #ffe09a; }
+a:focus-visible { outline: 2px solid #ffcf6b; outline-offset: 3px; }
+</style>
+</head>
+<body>
+<main>
+  <div>
+    <pre id="sea" aria-hidden="true"></pre>
+    <h1>404: you sailed off the edge of the map</h1>
+    <p>Nothing out here but water. The island is back this way.</p>
+    <a href="/">&larr; Sail home</a>
+  </div>
+</main>
+<script>
+(() => {
+  const sea = document.getElementById('sea'), W = 44, H = 9, still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const boat = ['    |\\    ', '    | \\   ', '    |  \\  ', ' ___|___\\_', ' \\_______/'];
+  const stars = [[3, 0], [12, 1], [30, 0], [38, 2], [21, 1], [7, 3]];
+  function frame(ms) {
+    const t = ms / 1000, g = [];
+    for (let y = 0; y < H; y++) g.push(new Array(W).fill(' ').map(() => [' ', '']));
+    for (const [x, y] of stars) g[y][x] = [(Math.sin(t * 2 + x) > 0.3 ? '+' : '.'), 'i'];
+    for (let y = 6; y < H; y++) for (let x = 0; x < W; x++) {
+      const v = Math.sin(x * 0.42 - t * 2.1 + y * 1.3) + 0.6 * Math.sin(x * 0.15 + t * 0.9 + y);
+      g[y][x] = [v > 0.95 ? '≈' : v > 0.05 ? '~' : ' ', ''];
+    }
+    const bob = Math.sin(t * 1.7) > 0 ? 1 : 0, bx = 17 + Math.round(Math.sin(t * 0.5) * 2), by = 1 + bob;
+    boat.forEach((row, r) => [...row].forEach((c, k) => { if (c !== ' ') g[by + r][bx + k] = [c, 'b']; }));
+    sea.innerHTML = g.map((row) => row.map(([c, tag]) => tag ? '<' + tag + '>' + c + '</' + tag + '>' : c).join('')).join('\n');
+    if (!still) requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>

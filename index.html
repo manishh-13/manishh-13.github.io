@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Manish S (manishh-13): I like building things</title>
+<meta name="description" content="Manish S (manishh-13) builds things to find out how they work. Explore a living ASCII island to find his projects: IP Map, Scaling Visualiser and URL X-Ray.">
+<link rel="canonical" href="https://manishh-13.github.io/">
+<meta name="author" content="Manish S">
+<meta name="theme-color" content="#06080e">
+<meta property="og:type" content="profile">
+<meta property="og:url" content="https://manishh-13.github.io/">
+<meta property="og:site_name" content="manishh-13">
+<meta property="og:title" content="Manish S (manishh-13): I like building things">
+<meta property="og:description" content="A living ASCII island you can explore. Every building on it is something I made.">
+<meta property="og:image" content="https://manishh-13.github.io/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="An ASCII island at golden hour with MANISH S carved in stone above a campfire">
+<meta property="profile:username" content="manishh-13">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Manish S (manishh-13): I like building things">
+<meta name="twitter:description" content="A living ASCII island you can explore. Every building on it is something I made.">
+<meta name="twitter:image" content="https://manishh-13.github.io/og.png">
+<meta name="twitter:image:alt" content="An ASCII island at golden hour with MANISH S carved in stone above a campfire">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="icon" href="favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"ProfilePage","url":"https://manishh-13.github.io/","mainEntity":{"@type":"Person","name":"Manish S","alternateName":"manishh-13","url":"https://manishh-13.github.io/","sameAs":["https://github.com/manishh-13"],"description":"Builds things to find out how they work."}}
+</script>
+<style>
+:root { color-scheme: dark; --void: #06080e; --ink: #ece9e1; --dim: #98a2b3; --faint: #5d6778; --amber: #ffcf6b; --teal: #6ff0d0; --glass: rgba(12, 16, 26, 0.6); --line: rgba(255, 255, 255, 0.11); --mono: "SF Mono", ui-monospace, Menlo, Monaco, Consolas, "DejaVu Sans Mono", "Liberation Mono", monospace; }
+* { box-sizing: border-box; }
+html { background: var(--void); scroll-behavior: smooth; }
+body { margin: 0; color: var(--ink); font: 14px/1.55 var(--mono); -webkit-font-smoothing: antialiased; }
+a { color: var(--amber); text-underline-offset: 3px; }
+a:hover { color: #fff; }
+kbd { font: inherit; font-size: 0.92em; padding: 0 5px; border: 1px solid var(--line); border-bottom-width: 2px; border-radius: 5px; color: var(--ink); background: rgba(255, 255, 255, 0.05); }
+button { font: inherit; color: inherit; }
+:focus-visible { outline: 2px solid var(--amber); outline-offset: 2px; }
+#card:focus { outline: none; }
+
+/* the island */
+#island { position: relative; height: 100vh; height: 100svh; min-height: 420px; overflow: hidden; background: var(--void); }
+#world { position: absolute; inset: 0; width: 100%; height: 100%; display: block; cursor: crosshair; touch-action: pan-y; outline: none; }
+#hud[hidden] { display: none; }
+#hud > * { position: absolute; transition: opacity 0.7s ease, translate 0.7s ease; }
+#hud.intro > * { opacity: 0; translate: 0 -6px; }
+#hud.intro > #card, #hud.intro > #tip { transition: none; }
+.glass { background: var(--glass); -webkit-backdrop-filter: blur(16px) saturate(1.35); backdrop-filter: blur(16px) saturate(1.35); border: 1px solid var(--line); border-radius: 14px; box-shadow: 0 12px 34px rgba(0, 0, 0, 0.38), inset 0 1px 0 rgba(255, 255, 255, 0.07); }
+.brand { top: 16px; left: 16px; padding: 9px 14px 10px; line-height: 1.3; }
+.brand b { font-size: 15px; letter-spacing: 0.02em; }
+.brand .cur { color: var(--amber); animation: blink 1.1s steps(1) infinite; }
+.brand small { display: block; color: var(--dim); font-size: 11.5px; margin-top: 2px; }
+@keyframes blink { 50% { opacity: 0; } }
+.places { top: 82px; left: 16px; width: 272px; padding: 8px 6px 6px; }
+.places summary { list-style: none; cursor: pointer; gap: 12px; padding: 2px 10px 6px; color: var(--dim); font-size: 11.5px; letter-spacing: 0.12em; text-transform: uppercase; display: flex; justify-content: space-between; }
+.places summary::-webkit-details-marker { display: none; }
+.places summary b { color: var(--teal); font-weight: 600; letter-spacing: 0; text-transform: none; }
+.places ul { list-style: none; margin: 0; padding: 0; }
+.places li button { width: 100%; display: grid; grid-template-columns: 16px 1fr auto; gap: 2px 8px; align-items: baseline; text-align: left; background: none; border: 0; border-radius: 9px; padding: 6px 10px; cursor: pointer; }
+.places li button:hover, .places li button:focus-visible { background: rgba(255, 255, 255, 0.07); }
+.places .dot { color: var(--faint); }
+.places .found .dot { color: var(--amber); }
+.places .name { font-weight: 600; }
+.places .secret .name { color: var(--faint); }
+.places .dir { color: var(--teal); font-size: 12px; white-space: nowrap; }
+.places .meta { grid-column: 2 / 4; color: var(--dim); font-size: 11.5px; }
+.clock { top: 16px; right: 16px; padding: 8px 13px; font-size: 12.5px; color: var(--dim); cursor: pointer; user-select: none; }
+.clock b { color: var(--ink); font-weight: 500; }
+.hint { bottom: 18px; left: 50%; transform: translateX(-50%); padding: 8px 14px; font-size: 12px; color: var(--dim); white-space: nowrap; transition: opacity 0.6s; }
+.hint.quiet { opacity: 0.35; }
+.hint:hover { opacity: 1; }
+#mini { bottom: 16px; right: 16px; width: 200px; height: 124px; padding: 0; image-rendering: pixelated; cursor: pointer; border-radius: 12px; }
+#mini.off { display: none; }
+.skip { bottom: 22px; left: 18px; font-size: 12px; color: var(--dim); text-decoration: none; padding: 4px 8px; border-radius: 8px; }
+.skip:hover, .skip:focus-visible { color: var(--ink); background: rgba(255, 255, 255, 0.06); }
+#tip { pointer-events: none; padding: 4px 9px; font-size: 12px; border-radius: 8px; white-space: nowrap; z-index: 5; }
+#toast { top: 18px; left: 50%; transform: translate(-50%, -12px); opacity: 0; padding: 9px 16px; font-size: 13px; transition: opacity 0.3s, transform 0.3s; pointer-events: none; z-index: 6; white-space: nowrap; }
+#toast.on { opacity: 1; transform: translate(-50%, 0); }
+#toast b { color: var(--amber); }
+
+/* project card */
+#card { top: 50%; right: 24px; width: min(390px, calc(100vw - 48px)); padding: 18px 20px 18px; transform-origin: 50% 60%; transform: translateY(-50%) perspective(900px) rotateX(10deg) translateY(18px) scale(0.97); opacity: 0; transition: opacity 0.22s, transform 0.32s cubic-bezier(0.2, 0.9, 0.3, 1.2); z-index: 4; }
+#card.open { opacity: 1; transform: translateY(-50%); }
+#card[hidden] { display: none; }
+#card .art { margin: 0 0 12px; color: var(--amber); font-size: 12px; line-height: 1.15; text-shadow: 0 0 14px rgba(255, 207, 107, 0.45); }
+#card .kicker { margin: 0; color: var(--teal); font-size: 11.5px; letter-spacing: 0.12em; text-transform: uppercase; }
+#card .title { margin: 2px 0 2px; font-size: 21px; line-height: 1.25; font-weight: 700; }
+#card .tag { margin: 0 0 10px; color: var(--amber); }
+#card p { margin: 0 0 12px; }
+#card .chips { list-style: none; display: flex; flex-wrap: wrap; gap: 6px; margin: 0 0 14px; padding: 0; }
+#card .chips li { font-size: 11px; color: var(--dim); border: 1px solid var(--line); border-radius: 999px; padding: 1px 9px; }
+#card .actions { display: flex; flex-wrap: wrap; gap: 8px; }
+.btn { display: inline-flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 10px; border: 1px solid var(--line); background: rgba(255, 255, 255, 0.06); color: var(--ink); text-decoration: none; cursor: pointer; font-size: 13px; }
+.btn:hover, .btn:focus-visible { background: rgba(255, 255, 255, 0.12); color: #fff; }
+.btn.primary { background: var(--amber); color: #1b1404; border-color: transparent; font-weight: 600; }
+.btn.primary:hover, .btn.primary:focus-visible { background: #ffe09a; color: #1b1404; }
+#card .close { position: absolute; top: 10px; right: 10px; background: none; border: 1px solid var(--line); border-radius: 8px; color: var(--dim); font-size: 11px; padding: 2px 7px; cursor: pointer; }
+#card .close:hover { color: var(--ink); }
+#ogcap { position: absolute; left: 34px; bottom: 30px; padding: 14px 20px 15px; display: grid; gap: 2px; }
+#ogcap[hidden] { display: none; }
+#ogcap b { font-size: 30px; letter-spacing: 0.01em; }
+#ogcap b::after { content: "_"; color: var(--amber); }
+#ogcap span { color: var(--amber); font-size: 16px; }
+#ogcap em { color: var(--dim); font-style: normal; font-size: 13px; }
+.nojs { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: var(--dim); text-align: center; }
+
+/* the plain version */
+#plain { max-width: 820px; margin: 0 auto; padding: 72px 24px 64px; }
+#plain .banner { display: block; width: min(100%, 560px); height: auto; margin: 0 0 30px; filter: drop-shadow(0 0 16px rgba(111, 240, 208, 0.22)); }
+#plain h1 { margin: 0; font-size: 26px; }
+#plain h1 span { color: var(--dim); font-weight: 400; font-size: 0.7em; }
+#plain .lede { color: var(--dim); font-size: 15px; max-width: 62ch; }
+#plain h2 { margin: 44px 0 14px; font-size: 13px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--teal); }
+#plain h2::before { content: "## "; color: var(--faint); }
+.projects { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px; }
+.projects article { height: 100%; padding: 16px 18px; border: 1px solid var(--line); border-radius: 14px; background: rgba(255, 255, 255, 0.025); }
+.projects h3 { margin: 0 0 2px; font-size: 16px; }
+.projects h3 a { color: var(--ink); text-decoration: none; }
+.projects h3 a:hover { color: var(--amber); }
+.projects .where { margin: 0 0 8px; color: var(--faint); font-size: 12px; }
+.projects p { margin: 0 0 10px; color: var(--dim); }
+.projects .links { margin: 0; font-size: 13px; }
+#plain footer { margin-top: 48px; color: var(--faint); font-size: 12px; }
+
+@media (max-width: 720px) {
+  .brand { top: 10px; left: 10px; padding: 7px 11px 8px; }
+  .brand small { display: none; }
+  .places { top: auto; bottom: 10px; left: 10px; right: 10px; width: auto; max-height: 46svh; overflow: auto; }
+  .places:not([open]) { right: auto; }
+  .clock { top: 10px; right: 10px; padding: 6px 10px; font-size: 11.5px; }
+  .skip, #mini { display: none; }
+  .hint { bottom: 60px; white-space: normal; width: max-content; max-width: calc(100vw - 24px); text-align: center; padding: 6px 12px; }
+  #placesBox[open] ~ .hint, #hud.carding .hint, #hud.carding .places { display: none; }
+  #card .close { position: sticky; top: 0; float: right; margin: -6px -8px 0 8px; background: rgba(12, 16, 26, 0.92); }
+  #card { top: auto; bottom: 10px; right: 10px; left: 10px; width: auto; max-height: 72svh; overflow: auto; transform: perspective(900px) rotateX(-8deg) translateY(30px); }
+  #card.open { transform: none; }
+  #card .art { font-size: 10.5px; }
+  #toast { top: 58px; white-space: normal; width: max-content; max-width: calc(100vw - 32px); text-align: center; }
+}
+@media (prefers-reduced-motion: reduce) { #card, #toast { transition: none; } .brand .cur { animation: none; } html { scroll-behavior: auto; } }
+</style>
+</head>
+<body>
+<section id="island" aria-label="An explorable ASCII island. Everything on it is also listed in plain text below.">
+  <canvas id="world" aria-hidden="true"></canvas>
+  <noscript><p class="nojs">The island needs JavaScript to grow.<br><a href="#plain">Everything on it is listed below.</a></p></noscript>
+  <div id="ogcap" class="glass" hidden><b>manishh-13</b><span>an island of things I've built</span><em>walk around: every building is a project</em></div>
+  <div id="hud" hidden>
+    <header class="glass brand"><b>manishh-13</b><span class="cur">_</span><small>an island of things I've built</small></header>
+    <details class="glass places" id="placesBox" open>
+      <summary><span>places</span><b id="explored">0% explored</b></summary>
+      <ul id="places"></ul>
+    </details>
+    <div class="glass clock" id="clock" title="Skip ahead (N)" role="button" tabindex="0"></div>
+    <div class="glass hint" id="hint"></div>
+    <canvas id="mini" class="glass" width="200" height="124" aria-hidden="true"></canvas>
+    <a class="skip" href="#plain">plain version &darr;</a>
+    <div id="card" class="glass" role="dialog" aria-labelledby="cardTitle" tabindex="-1" hidden></div>
+    <div id="tip" class="glass" hidden></div>
+    <div id="toast" class="glass" role="status" aria-live="polite"></div>
+  </div>
+</section>
+
+<main id="plain">
+<svg class="banner" viewBox="-1 -1 356 62" aria-hidden="true" focusable="false"><path fill="none" stroke="#6f7767" stroke-width="0.8" stroke-linecap="square" d="M18 3.75H22.25M22.25 3.75V10M18 6.25H19.75M19.75 6.25V10M60 3.75H64.25M64.25 3.75V10M60 6.25H61.75M61.75 6.25V10M102 3.75H106.25M106.25 3.75V10M102 6.25H103.75M103.75 6.25V10M132 3.75H136.25M136.25 3.75V10M132 6.25H133.75M133.75 6.25V10M168 3.75H172.25M172.25 3.75V10M168 6.25H169.75M169.75 6.25V10M186 3.75H190.25M190.25 3.75V10M186 6.25H187.75M187.75 6.25V10M234 3.75H238.25M238.25 3.75V10M234 6.25H235.75M235.75 6.25V10M252 3.75H256.25M256.25 3.75V10M252 6.25H253.75M253.75 6.25V10M282 3.75H286.25M286.25 3.75V10M282 6.25H283.75M283.75 6.25V10M348 3.75H352.25M352.25 3.75V10M348 6.25H349.75M349.75 6.25V10M24 13.75H28.25M28.25 13.75V20M24 16.25H25.75M25.75 16.25V20M61.75 10V20M64.25 10V20M79.75 13.75H84M79.75 13.75V20M82.25 16.25H84M82.25 16.25V20M84 13.75H90M84 16.25H90M90 13.75H96M90 16.25H96M108 13.75H112.25M112.25 13.75V20M108 16.25H109.75M109.75 16.25V20M138 13.75H142.25M142.25 13.75V20M138 16.25H139.75M139.75 16.25V20M169.75 10V20M172.25 10V20M187.75 10V20M190.25 10V20M205.75 13.75H210M205.75 13.75V20M208.25 16.25H210M208.25 16.25V20M210 13.75H216M210 16.25H216M216 13.75H222M216 16.25H222M222 13.75H228M222 16.25H228M228 13.75H234M228 16.25H234M234 16.25H238.25M238.25 10V16.25M234 13.75H235.75M235.75 10V13.75M253.75 10V20M256.25 10V20M283.75 10V20M286.25 10V20M319.75 13.75H324M319.75 13.75V20M322.25 16.25H324M322.25 16.25V20M324 13.75H330M324 16.25H330M330 13.75H336M330 16.25H336M336 13.75H342M336 16.25H342M342 13.75H348M342 16.25H348M348 16.25H352.25M352.25 10V16.25M348 13.75H349.75M349.75 10V13.75M13.75 23.75H18M13.75 23.75V30M16.25 26.25H18M16.25 26.25V30M43.75 23.75H48M43.75 23.75V30M46.25 26.25H48M46.25 26.25V30M61.75 20V30M64.25 20V30M109.75 20V30M112.25 20V30M127.75 23.75H132M127.75 23.75V30M130.25 26.25H132M130.25 26.25V30M144 23.75H148.25M148.25 23.75V30M144 26.25H145.75M145.75 26.25V30M169.75 20V30M172.25 20V30M187.75 20V30M190.25 20V30M234 23.75H238.25M238.25 23.75V30M234 26.25H235.75M235.75 26.25V30M283.75 20V30M286.25 20V30M348 23.75H352.25M352.25 23.75V30M348 26.25H349.75M349.75 26.25V30M13.75 30V40M16.25 30V40M19.75 36.25H24M19.75 30V36.25M22.25 33.75H24M22.25 30V33.75M37.75 33.75H42M37.75 33.75V40M40.25 36.25H42M40.25 36.25V40M42 36.25H46.25M46.25 30V36.25M42 33.75H43.75M43.75 30V33.75M61.75 30V40M64.25 30V40M79.75 33.75H84M79.75 33.75V40M82.25 36.25H84M82.25 36.25V40M84 33.75H90M84 36.25H90M90 33.75H96M90 36.25H96M109.75 30V40M112.25 30V40M127.75 30V40M130.25 30V40M133.75 36.25H138M133.75 30V36.25M136.25 33.75H138M136.25 30V33.75M150 33.75H154.25M154.25 33.75V40M150 36.25H151.75M151.75 36.25V40M169.75 30V40M172.25 30V40M187.75 30V40M190.25 30V40M193.75 36.25H198M193.75 30V36.25M196.25 33.75H198M196.25 30V33.75M198 33.75H204M198 36.25H204M204 33.75H210M204 36.25H210M210 33.75H216M210 36.25H216M216 33.75H222M216 36.25H222M235.75 30V40M238.25 30V40M253.75 33.75H258M253.75 33.75V40M256.25 36.25H258M256.25 36.25V40M258 33.75H264M258 36.25H264M264 33.75H270M264 36.25H270M283.75 30V40M286.25 30V40M307.75 36.25H312M307.75 30V36.25M310.25 33.75H312M310.25 30V33.75M312 33.75H318M312 36.25H318M318 33.75H324M318 36.25H324M324 33.75H330M324 36.25H330M330 33.75H336M330 36.25H336M349.75 30V40M352.25 30V40M13.75 40V50M16.25 40V50M25.75 46.25H30M25.75 40V46.25M28.25 43.75H30M28.25 40V43.75M30 43.75H36M30 46.25H36M36 46.25H40.25M40.25 40V46.25M36 43.75H37.75M37.75 40V43.75M61.75 40V50M64.25 40V50M79.75 40V50M82.25 40V50M109.75 40V50M112.25 40V50M127.75 40V50M130.25 40V50M139.75 46.25H144M139.75 40V46.25M142.25 43.75H144M142.25 40V43.75M169.75 40V50M172.25 40V50M187.75 40V50M190.25 40V50M235.75 40V50M238.25 40V50M253.75 40V50M256.25 40V50M283.75 40V50M286.25 40V50M349.75 40V50M352.25 40V50M1.75 56.25H6M1.75 50V56.25M4.25 53.75H6M4.25 50V53.75M6 53.75H12M6 56.25H12M12 56.25H16.25M16.25 50V56.25M12 53.75H13.75M13.75 50V53.75M49.75 56.25H54M49.75 50V56.25M52.25 53.75H54M52.25 50V53.75M54 53.75H60M54 56.25H60M60 56.25H64.25M64.25 50V56.25M60 53.75H61.75M61.75 50V53.75M67.75 56.25H72M67.75 50V56.25M70.25 53.75H72M70.25 50V53.75M72 53.75H78M72 56.25H78M78 56.25H82.25M82.25 50V56.25M78 53.75H79.75M79.75 50V53.75M97.75 56.25H102M97.75 50V56.25M100.25 53.75H102M100.25 50V53.75M102 53.75H108M102 56.25H108M108 56.25H112.25M112.25 50V56.25M108 53.75H109.75M109.75 50V53.75M115.75 56.25H120M115.75 50V56.25M118.25 53.75H120M118.25 50V53.75M120 53.75H126M120 56.25H126M126 56.25H130.25M130.25 50V56.25M126 53.75H127.75M127.75 50V53.75M145.75 56.25H150M145.75 50V56.25M148.25 53.75H150M148.25 50V53.75M150 53.75H156M150 56.25H156M156 53.75H162M156 56.25H162M162 53.75H168M162 56.25H168M168 56.25H172.25M172.25 50V56.25M168 53.75H169.75M169.75 50V53.75M175.75 56.25H180M175.75 50V56.25M178.25 53.75H180M178.25 50V53.75M180 53.75H186M180 56.25H186M186 56.25H190.25M190.25 50V56.25M186 53.75H187.75M187.75 50V53.75M193.75 56.25H198M193.75 50V56.25M196.25 53.75H198M196.25 50V53.75M198 53.75H204M198 56.25H204M204 53.75H210M204 56.25H210M210 53.75H216M210 56.25H216M216 53.75H222M216 56.25H222M222 53.75H228M222 56.25H228M228 53.75H234M228 56.25H234M234 56.25H238.25M238.25 50V56.25M234 53.75H235.75M235.75 50V53.75M241.75 56.25H246M241.75 50V56.25M244.25 53.75H246M244.25 50V53.75M246 53.75H252M246 56.25H252M252 56.25H256.25M256.25 50V56.25M252 53.75H253.75M253.75 50V53.75M271.75 56.25H276M271.75 50V56.25M274.25 53.75H276M274.25 50V53.75M276 53.75H282M276 56.25H282M282 56.25H286.25M286.25 50V56.25M282 53.75H283.75M283.75 50V53.75M307.75 56.25H312M307.75 50V56.25M310.25 53.75H312M310.25 50V53.75M312 53.75H318M312 56.25H318M318 53.75H324M318 56.25H324M324 53.75H330M324 56.25H330M330 53.75H336M330 56.25H336M336 53.75H342M336 56.25H342M342 53.75H348M342 56.25H348M348 56.25H352.25M352.25 50V56.25M348 53.75H349.75M349.75 50V53.75"/><path fill="#d9d2c2" d="M0 0h18v10h-18zM42 0h18v10h-18zM72 0h30v10h-30zM114 0h18v10h-18zM156 0h12v10h-12zM174 0h12v10h-12zM192 0h42v10h-42zM240 0h12v10h-12zM270 0h12v10h-12zM306 0h42v10h-42zM0 10h24v10h-24zM36 10h24v10h-24zM66 10h12v10h-12zM96 10h12v10h-12zM114 10h24v10h-24zM156 10h12v10h-12zM174 10h12v10h-12zM192 10h12v10h-12zM240 10h12v10h-12zM270 10h12v10h-12zM306 10h12v10h-12zM0 20h12v10h-12zM18 20h24v10h-24zM48 20h12v10h-12zM66 20h42v10h-42zM114 20h12v10h-12zM132 20h12v10h-12zM156 20h12v10h-12zM174 20h12v10h-12zM192 20h42v10h-42zM240 20h42v10h-42zM306 20h42v10h-42zM0 30h12v10h-12zM24 30h12v10h-12zM48 30h12v10h-12zM66 30h12v10h-12zM96 30h12v10h-12zM114 30h12v10h-12zM138 30h12v10h-12zM156 30h12v10h-12zM174 30h12v10h-12zM222 30h12v10h-12zM240 30h12v10h-12zM270 30h12v10h-12zM336 30h12v10h-12zM0 40h12v10h-12zM48 40h12v10h-12zM66 40h12v10h-12zM96 40h12v10h-12zM114 40h12v10h-12zM144 40h24v10h-24zM174 40h12v10h-12zM192 40h42v10h-42zM240 40h12v10h-12zM270 40h12v10h-12zM306 40h42v10h-42z"/></svg>
+  <h1>Manish S <span>@manishh-13</span></h1>
+  <p class="lede">I like building things, mostly to find out how stuff works. The island above is one of them: every building on it is a project. Here is the same list without the walking.</p>
+
+  <h2>Things I've built</h2>
+  <ul class="projects">
+    <li><article>
+      <h3><a href="https://manishh-13.github.io/aws-ip-map/">IP Map</a></h3>
+      <p class="where">the lighthouse</p>
+      <p>Who owns this IP address? Every published IP range of the world's biggest cloud on one searchable map. Paste an address to see its region and service, browse its history back to 2015, or build an allowlist. It re-syncs itself every 30 minutes.</p>
+      <p class="links"><a href="https://manishh-13.github.io/aws-ip-map/">Open IP Map</a> &middot; <a href="https://github.com/manishh-13/aws-ip-map" aria-label="IP Map source code on GitHub">Source</a></p>
+    </article></li>
+    <li><article>
+      <h3><a href="https://manishh-13.github.io/lambda-scaling-visualiser/">Scaling Visualiser</a></h3>
+      <p class="where">the windmill</p>
+      <p>An interactive, browser-only simulation of how serverless functions scale when traffic hits: concurrency, cold starts, warm reuse, scaling rate and throttling.</p>
+      <p class="links"><a href="https://manishh-13.github.io/lambda-scaling-visualiser/">Open the visualiser</a> &middot; <a href="https://github.com/manishh-13/lambda-scaling-visualiser" aria-label="Scaling Visualiser source code on GitHub">Source</a></p>
+    </article></li>
+    <li><article>
+      <h3><a href="https://manishh-13.github.io/url-x-ray/">URL X-Ray</a></h3>
+      <p class="where">the x-ray lab</p>
+      <p>An evidence-first, interactive map of the public internet infrastructure behind a URL: live DNS records, the networks and organisations behind each address, and reverse DNS.</p>
+      <p class="links"><a href="https://manishh-13.github.io/url-x-ray/">Open URL X-Ray</a> &middot; <a href="https://github.com/manishh-13/url-x-ray" aria-label="URL X-Ray source code on GitHub">Source</a></p>
+    </article></li>
+    <li><article>
+      <h3><a href="https://github.com/manishh-13/manishh-13.github.io">This island</a></h3>
+      <p class="where">you are standing on it</p>
+      <p>A living ASCII world grown from one number with fractal noise, roads carved by A*, a day and night cycle, and a lighthouse that actually sweeps. Plain JavaScript and one canvas, no frameworks.</p>
+      <p class="links"><a href="https://github.com/manishh-13/manishh-13.github.io" aria-label="Source code of this island on GitHub">Source</a></p>
+    </article></li>
+  </ul>
+
+  <h2>Find me</h2>
+  <p><a href="https://github.com/manishh-13" rel="me">github.com/manishh-13</a></p>
+  <footer>Made by hand, one character at a time. <a href="#island">Back to the island &uarr;</a></footer>
+</main>
+<script src="gen.js"></script>
+<script src="island.js"></script>
+</body>
+</html>
