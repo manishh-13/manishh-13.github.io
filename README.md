@@ -49,4 +49,7 @@ No frameworks, no build step, no dependencies. Two plain JavaScript files and on
 ```sh
 python3 -m http.server 8000      # then open http://localhost:8000
 node --test 'test/*.test.cjs'    # generator tests
+node tools/shoot.mjs shot.json   # screenshots, the way og.png was made
 ```
+
+Add `?seed=1234` to the URL for a different island, or find the chest and roll one.

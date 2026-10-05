@@ -660,6 +660,7 @@
     cat.next = 0.35 + Math.random() * 0.6;
   }
   function update(dt) {
+    if (OG) { clock = Number(params.get('c')) || 9.5; return; }
     clock += dt;
     if (!FREEZE) dayT = (dayT + dt / DAY) % 1;
     if (clock >= player.next) {
@@ -691,12 +692,12 @@
     millPhase += dt * (1.4 + 3 * (wm ? wind(wm.x, wm.y, clock) : 0.5)) * (REDUCE ? 0.25 : 1);
     millFrame = Math.floor(millPhase);
     const f = byId.campfire;
-    if (f && !REDUCE) {
+    if (f && !REDUCE && !OG) {
       sparkAcc += dt * (3 + 6 * night);
       while (sparkAcc > 1) { sparkAcc--; particles.push({ kind: 'spark', x: f.x + 0.6 + Math.random() * 1.8, y: f.y - 0.2, vx: (Math.random() - 0.5) * 1.2 + 0.5, vy: -(2.4 + Math.random() * 2.6), age: 0, life: 0.7 + Math.random() * 0.9, grav: -0.4 }); }
     }
     const ws = byId.workshop;
-    if (ws && !REDUCE) {
+    if (ws && !REDUCE && !OG) {
       smokeAcc += dt * 1.5;
       while (smokeAcc > 1) { smokeAcc--; particles.push({ kind: 'smoke', x: ws.x + 6, y: ws.y - 1, vx: 0.9 + Math.random() * 0.8, vy: -(0.9 + Math.random() * 0.6), age: 0, life: 2.4 + Math.random() * 1.4, grav: 0.05 }); }
     }
